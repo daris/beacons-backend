@@ -39,6 +39,16 @@ class Store(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
 
+    def as_json(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            description=self.description,
+        )
+
+    def __unicode__(self):
+        return self.name
+
 
 class Beacon(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)

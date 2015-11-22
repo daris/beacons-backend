@@ -25,7 +25,7 @@ class StoresListView(View):
         stores = Store.objects.all()
 
         result = {
-            'stores': stores
+            'stores': [s.as_json() for s in stores]
         }
         return JsonResponse(result, safe=False)
 

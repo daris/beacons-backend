@@ -2,3 +2,4 @@ env/
 beacons/local_settings.py
 media/
 .idea/
+*.pyc

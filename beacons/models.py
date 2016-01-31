@@ -2,10 +2,28 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from beacons.utils import media_url
+from django.utils import timezone
 
 
 class PortalUserManager(BaseUserManager):
-    pass
+    def _create_user(self, username, password, is_admin, **extra_fields):
+        """
+        Creates and saves a User with the given username and password.
+        """
+        now = timezone.now()
+        if not username:
+            raise ValueError('The given username must be set')
+        user = self.model(username=username, last_login=now, is_admin=is_admin, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, username, password=None, **extra_fields):
+        return self._create_user(username, password, False, **extra_fields)
+
+    def create_superuser(self, username, password, **extra_fields):
+        return self._create_user(username, password, True, **extra_fields)
+
 
 
 class User(AbstractBaseUser):
@@ -33,6 +51,18 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return self.is_staff
+
+    def has_seen_offer(self, offer):
+        return self.seen_offers.filter(offer=offer, user=self).count() > 0
+
+    def mark_offer_as_seen(self, offer):
+        self.seen_offers.create(offer=offer)
 
 
 class Store(models.Model):

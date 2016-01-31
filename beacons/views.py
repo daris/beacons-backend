@@ -1,6 +1,6 @@
 import json
 
-from beacons.models import Beacon, Store
+from beacons.models import Beacon, Store, User
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -29,17 +29,28 @@ class BeaconsSeenView(View):
         data = json.loads(request.body)
         beacons_data = data.get('beacons', [])
 
+        user = User.objects.get(id=1)
+
         filters = Q()
         for beacon_data in beacons_data:
             filters |= Q(uuid=beacon_data.get('uuid'), major=beacon_data.get('major'), minor=beacon_data.get('minor'))
 
         beacons = Beacon.objects.filter(filters)
-        for beacon in beacons:
-            if not beacon.shop:
-                continue
+        store_ids = [b.store_id for b in beacons if b.store]
+        if not store_ids:
+            return JsonResponse({'message': 'No stores matched for given beacons.'}, safe=False)
 
-            device = GCMDevice.objects.get(user__id=1)
-            device.send_message("New promotions for %s!" % beacon.shop.name)
+        stores = Store.objects.filter(id__in=store_ids)
+        for store in stores:
+            offers = store.offers.all()
+            for offer in offers:
+                if user.has_seen_offer(offer):
+                    continue
+
+                device = GCMDevice.objects.get(user=user)
+                device.send_message("%s: %s!" % (store.name, offer.name))
+
+                user.mark_offer_as_seen(offer)
 
         result = {
             'b': [b.as_json() for b in beacons]

@@ -169,6 +169,8 @@ LOGGING = {
 
 STATIC_URL = '/static/'
 
+AUTH_USER_MODEL = 'beacons.User'
+
 PUSH_NOTIFICATIONS_SETTINGS = {
     "GCM_API_KEY": "AIzaSyDKG6KKlI9Lo4vbgz3obQP4YwV_kSXWTCk", # sender id: 1022623213000
     "APNS_CERTIFICATE": "/path/to/your/certificate.pem",

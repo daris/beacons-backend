@@ -13,12 +13,14 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from beacons.views import BeaconsListView, StoresListView
+from beacons.views import BeaconsListView, StoresListView, BeaconsSeenView
 from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    url(r'^api/beacons_seen', BeaconsSeenView.as_view(), name="api_beacons"),
     url(r'^api/beacons', BeaconsListView.as_view(), name="api_beacons"),
+
     url(r'^api/stores', StoresListView.as_view(), name="api_stores"),
 
     url(r'^admin/', include(admin.site.urls)),

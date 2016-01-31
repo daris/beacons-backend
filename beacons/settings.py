@@ -103,6 +103,66 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'filters': ['require_debug_true'],
+            'class':'logging.StreamHandler',
+        },
+        'default': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + '/logs/default.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+        },
+        'request_handler': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + '/logs/django_request.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default', 'console'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django': {
+            'handlers': ['console', 'default'],
+            'propagate': False
+        },
+        # 'blueanker.check_masters': {
+        #     'handlers': ['console', 'check_masters'],
+        #     'propagate': False
+        # },
+        'blueanker.logger.LoggingMiddleware': {
+            'handlers': ['default'],
+            'propagate': False
+        },
+#         'django.request': {
+#             'handlers': ['request_handler', 'console'],
+#             'level': 'DEBUG',
+#             'propagate': False
+#         },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False
+        }
+    },
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

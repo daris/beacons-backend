@@ -57,6 +57,17 @@ class Beacon(models.Model):
     major = models.IntegerField(blank=True, null=True)
     store = models.ForeignKey(Store, db_column='store_id', related_name='beacons', blank=True, null=True)
 
+    def as_json(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            uuid=self.uuid,
+            minor=self.minor,
+            major=self.major,
+            store=self.store.name,
+        )
+
+
 
 class StoreOffer(models.Model):
     image = models.ImageField(upload_to="store_offers", blank=True, null=True)

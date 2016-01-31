@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'beacons',
+    "push_notifications",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,6 +108,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "GCM_API_KEY": "AIzaSyDKG6KKlI9Lo4vbgz3obQP4YwV_kSXWTCk", # sender id: 1022623213000
+    "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
+}
 
 # import from local_settings.py
 # should be at the end of settings file

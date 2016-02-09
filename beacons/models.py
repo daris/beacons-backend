@@ -68,12 +68,14 @@ class User(AbstractBaseUser):
 class Store(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='stores')
 
     def as_json(self):
         return dict(
             id=self.id,
             name=self.name,
             description=self.description,
+            imageUrl=media_url(self.image.name) if self.image else '',
         )
 
     def __unicode__(self):
@@ -87,6 +89,9 @@ class Beacon(models.Model):
     major = models.IntegerField(blank=True, null=True)
     store = models.ForeignKey(Store, db_column='store_id', related_name='beacons', blank=True, null=True)
 
+    def __unicode__(self):
+        return '%s: %s, %s, %s' % (self.name, self.uuid, self.major, self.minor)
+
     def as_json(self):
         return dict(
             id=self.id,
@@ -96,7 +101,6 @@ class Beacon(models.Model):
             major=self.major,
             store=self.store.name,
         )
-
 
 
 class StoreOffer(models.Model):

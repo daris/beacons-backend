@@ -52,6 +52,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'beacons.thread_local.ThreadLocalMiddleware',
+    'beacons.logger.LoggingMiddleware',
 )
 
 ROOT_URLCONF = 'beacons.urls'
@@ -176,6 +177,9 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     "GCM_API_KEY": "AIzaSyDKG6KKlI9Lo4vbgz3obQP4YwV_kSXWTCk", # sender id: 1022623213000
     "APNS_CERTIFICATE": "/path/to/your/certificate.pem",
 }
+
+LOG_HTTP_REQUESTS = True
+LOG_HTTP_RESPONSES = True
 
 # import from local_settings.py
 # should be at the end of settings file

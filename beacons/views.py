@@ -1,6 +1,6 @@
 import json
 
-from beacons.models import Beacon, Store, User
+from beacons.models import Beacon, Store, User, StoreOffer
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -48,7 +48,7 @@ class BeaconsSeenView(View):
                     continue
 
                 device = GCMDevice.objects.get(user=user)
-                device.send_message("%s: %s!" % (store.name, offer.name))
+                device.send_message("%s: %s!" % (store.name, offer.name), extra={"offerId": offer.id})
 
                 user.mark_offer_as_seen(offer)
 
@@ -69,6 +69,24 @@ class StoresListView(View):
 
         result = {
             'stores': [s.as_json() for s in stores]
+        }
+        return JsonResponse(result, safe=False)
+
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return View.dispatch(self, request, *args, **kwargs)
+
+
+class StoreOfferView(View):
+
+    def get(self, request, offer_id):
+        try:
+            offer = StoreOffer.objects.get(id=offer_id)
+        except StoreOffer.DoesNotExist:
+            return JsonResponse({'error': 'Offer was not found'})
+
+        result = {
+            'offer': offer.as_json()
         }
         return JsonResponse(result, safe=False)
 

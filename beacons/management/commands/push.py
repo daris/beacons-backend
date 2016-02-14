@@ -15,6 +15,6 @@ class Command(BaseCommand):
         # For dicts where all values are keys this will be sent as url parameters,
         # but for more complex nested collections the extras dict will be sent via
         # the bulk message api.
-        device.send_message(None, extra={"foo": "bar"})
+        device.send_message(None, extra={"offerId": 1})
 
         self.stdout.write('Done')

@@ -110,11 +110,11 @@ class StoreOffer(models.Model):
 
     def as_json(self):
         return dict(
-            promotionId=self.id,
-            promotionName=self.name,
+            id=self.id,
+            name=self.name,
+            description='',
             imageUrl=media_url(self.image.name) if self.image else '',
-            storeId=self.store.id if self.store else None,
-            storeName=self.store.name if self.store else None,
+            store=self.store.as_json(),
         )
 
     def __unicode__(self):

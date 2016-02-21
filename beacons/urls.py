@@ -14,12 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 from beacons import settings
-from beacons.views import BeaconsListView, StoresListView, BeaconsSeenView, StoreOfferView
+from beacons.views.auth import SetPushTokenView
+from beacons.views.beacon import BeaconsListView, StoresListView, BeaconsSeenView, StoreOfferView
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
 
 urlpatterns = [
+    url(r'^api/set_push_token', SetPushTokenView.as_view(), name="api_set_push_token"),
+
     url(r'^api/beacons_seen', BeaconsSeenView.as_view(), name="api_beacons"),
     url(r'^api/beacons', BeaconsListView.as_view(), name="api_beacons"),
 

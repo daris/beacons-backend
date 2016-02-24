@@ -67,7 +67,7 @@ class User(AbstractBaseUser):
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, blank=True, null=True)
     image = models.ImageField(upload_to='stores')
 
     def as_json(self):
@@ -129,4 +129,4 @@ class SeenOffer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return '%s, %s' % (self.offer, self.user)
+        return '%s, %s' % (self.offer.name, self.user.username)

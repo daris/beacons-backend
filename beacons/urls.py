@@ -15,7 +15,7 @@ Including another URLconf
 """
 from beacons import settings
 from beacons.views.auth import SetPushTokenView
-from beacons.views.beacon import BeaconsListView, StoresListView, BeaconsSeenView, StoreOfferView
+from beacons.views.beacon import BeaconsListView, StoresListView, BeaconsSeenView, StoreOfferView, StoreOffersView
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
@@ -28,6 +28,7 @@ urlpatterns = [
 
     url(r'^api/offers/(?P<offer_id>\d+)', StoreOfferView.as_view(), name="api_store_offer"),
 
+    url(r'^api/stores/(?P<store_id>\d+)/offers', StoreOffersView.as_view(), name="api_store_offers"),
     url(r'^api/stores', StoresListView.as_view(), name="api_stores"),
 
     url(r'^admin/', include(admin.site.urls)),

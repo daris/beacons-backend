@@ -93,3 +93,18 @@ class StoreOfferView(View):
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return View.dispatch(self, request, *args, **kwargs)
+
+
+class StoreOffersView(View):
+
+    def get(self, request, store_id):
+        offers = StoreOffer.objects.filter(store__id=store_id).all()
+
+        result = {
+            'offers': [s.as_json() for s in offers]
+        }
+        return JsonResponse(result, safe=False)
+
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return View.dispatch(self, request, *args, **kwargs)

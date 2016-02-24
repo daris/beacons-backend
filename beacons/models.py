@@ -67,7 +67,7 @@ class User(AbstractBaseUser):
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='stores')
 
     def as_json(self):

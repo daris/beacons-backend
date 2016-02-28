@@ -1,5 +1,5 @@
 from beacons.thread_local import get_current_request
-from beacons.settings import MEDIA_URL
+from beacons.settings import MEDIA_URL, PUBLIC_URL
 
 
 def absolute_url(url=''):
@@ -7,4 +7,4 @@ def absolute_url(url=''):
     return 'http://%s' % request.get_host() + url
 
 def media_url(url):
-    return absolute_url(MEDIA_URL + url)
+    return PUBLIC_URL + MEDIA_URL + url

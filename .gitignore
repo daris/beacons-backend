@@ -4,3 +4,4 @@ media/
 .idea/
 *.pyc
 logs/
+static/

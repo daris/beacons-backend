@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+PUBLIC_URL = 'http://192.168.0.5:8000'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -53,6 +54,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'beacons.thread_local.ThreadLocalMiddleware',
     'beacons.logger.LoggingMiddleware',
+)
+
+
+AUTHENTICATION_BACKENDS = (
+    # 'beacons.auth.UserBackend',
+    'beacons.auth.TokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'beacons.urls'
@@ -170,6 +178,7 @@ LOGGING = {
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 AUTH_USER_MODEL = 'beacons.User'
 

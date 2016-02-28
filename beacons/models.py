@@ -1,4 +1,10 @@
 # coding=utf-8
+import binascii
+
+from datetime import timedelta
+
+import os
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from beacons.utils import media_url
@@ -63,6 +69,13 @@ class User(AbstractBaseUser):
 
     def mark_offer_as_seen(self, offer):
         self.seen_offers.create(offer=offer)
+
+    def as_json(self):
+        return dict(
+            id=self.id,
+            username=self.username,
+            name=self.name,
+        )
 
 
 class Store(models.Model):
@@ -130,3 +143,26 @@ class SeenOffer(models.Model):
 
     def __unicode__(self):
         return '%s, %s' % (self.offer.name, self.user.username)
+
+
+class Token(models.Model):
+    user = models.ForeignKey(User, related_name='tokens')
+    token = models.CharField(max_length=40, primary_key=True)
+    expire_at = models.DateTimeField()
+    last_active_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    device_id = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = self.generate_token()
+        return super(Token, self).save(*args, **kwargs)
+
+    def generate_token(self):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def update_expiration(self):
+        self.expire_at = timezone.now() + timedelta(days=365)
+
+    def __unicode__(self):
+        return self.token

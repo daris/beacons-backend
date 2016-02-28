@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 from beacons import settings
-from beacons.views.auth import SetPushTokenView
+from beacons.views.auth import SetPushTokenView, LoginView, LogoutView
 from beacons.views.beacon import BeaconsListView, StoresListView, BeaconsSeenView, StoreOfferView, StoreOffersView
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -30,6 +30,9 @@ urlpatterns = [
 
     url(r'^api/stores/(?P<store_id>\d+)/offers', StoreOffersView.as_view(), name="api_store_offers"),
     url(r'^api/stores', StoresListView.as_view(), name="api_stores"),
+
+    url(r'^api/login', LoginView.as_view(), name='login'),
+    url(r'^api/logout', LogoutView.as_view(), name='logout'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]

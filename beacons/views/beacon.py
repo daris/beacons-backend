@@ -1,5 +1,6 @@
 import json
 
+from beacons.auth import token_required
 from beacons.models import Beacon, Store, User, StoreOffer
 from django.db.models import Q
 from django.http import JsonResponse
@@ -53,7 +54,7 @@ class BeaconsSeenView(View):
                 user.mark_offer_as_seen(offer)
 
         result = {
-            'b': [b.as_json() for b in beacons]
+            # 'b': [b.as_json() for b in beacons]
         }
         return JsonResponse(result, safe=False)
 
@@ -73,6 +74,7 @@ class StoresListView(View):
         return JsonResponse(result, safe=False)
 
     @csrf_exempt
+    @token_required
     def dispatch(self, request, *args, **kwargs):
         return View.dispatch(self, request, *args, **kwargs)
 
@@ -91,6 +93,7 @@ class StoreOfferView(View):
         return JsonResponse(result, safe=False)
 
     @csrf_exempt
+    @token_required
     def dispatch(self, request, *args, **kwargs):
         return View.dispatch(self, request, *args, **kwargs)
 
@@ -106,5 +109,6 @@ class StoreOffersView(View):
         return JsonResponse(result, safe=False)
 
     @csrf_exempt
+    @token_required
     def dispatch(self, request, *args, **kwargs):
         return View.dispatch(self, request, *args, **kwargs)

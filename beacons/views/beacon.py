@@ -20,6 +20,7 @@ class BeaconsListView(View):
         return JsonResponse(result, safe=False)
 
     @csrf_exempt
+    @token_required
     def dispatch(self, request, *args, **kwargs):
         return View.dispatch(self, request, *args, **kwargs)
 
@@ -30,7 +31,7 @@ class BeaconsSeenView(View):
         data = json.loads(request.body)
         beacons_data = data.get('beacons', [])
 
-        user = User.objects.get(id=1)
+        user = request.user
 
         filters = Q()
         for beacon_data in beacons_data:
@@ -48,8 +49,9 @@ class BeaconsSeenView(View):
                 if user.has_seen_offer(offer):
                     continue
 
-                device = GCMDevice.objects.get(user=user)
-                device.send_message("%s: %s!" % (store.name, offer.name), extra={"offerId": offer.id})
+                devices = GCMDevice.objects.filter(user=user)
+                for device in devices:
+                    device.send_message("%s: %s!" % (store.name, offer.name), extra={"offerId": offer.id})
 
                 user.mark_offer_as_seen(offer)
 
@@ -59,6 +61,7 @@ class BeaconsSeenView(View):
         return JsonResponse(result, safe=False)
 
     @csrf_exempt
+    @token_required
     def dispatch(self, request, *args, **kwargs):
         return View.dispatch(self, request, *args, **kwargs)
 

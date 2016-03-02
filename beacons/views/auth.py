@@ -35,10 +35,12 @@ class LoginView(View):
     def post(self, request):
         data = json.loads(request.body)
 
+        registration_id = data.get('registration_id')
+
         user = authenticate(username=data.get('username'), password=data.get('password'))
         if user is None:
             # the authentication system was unable to verify the username and password
-            return JsonResponse({'error': "Nazwa użytkownika lub hasło jest nieprawidłowa"}, status=401)
+            return JsonResponse({'error': "Nazwa użytkownika lub hasło jest nieprawidłowe"}, status=401)
 
         if not user.is_active:
             return JsonResponse({'error': "Konto zostało zdezaktywowane"}, status=401)
@@ -51,6 +53,10 @@ class LoginView(View):
             'token': token.token,
             'user': user.as_json(),
         }
+
+        GCMDevice.objects.filter(registration_id=registration_id).delete()
+        if registration_id:
+            GCMDevice.objects.create(user=user, registration_id=registration_id)
 
         login(request, user)
 
@@ -66,7 +72,7 @@ class LogoutView(View):
         data = json.loads(request.body)
 
         user = request.user
-        user.tokens.delete()
+        user.tokens.all().delete()
         GCMDevice.objects.filter(user=user).delete()
 
         logout(request)

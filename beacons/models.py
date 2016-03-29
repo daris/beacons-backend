@@ -100,7 +100,7 @@ class Beacon(models.Model):
     uuid = models.CharField(max_length=50, blank=True, null=True)
     minor = models.IntegerField(blank=True, null=True)
     major = models.IntegerField(blank=True, null=True)
-    store = models.ForeignKey(Store, db_column='store_id', related_name='beacons', blank=True, null=True)
+    store = models.ForeignKey(Store, db_column='store_id', related_name='beacons', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __unicode__(self):
         return '%s: %s, %s, %s' % (self.name, self.uuid, self.major, self.minor)

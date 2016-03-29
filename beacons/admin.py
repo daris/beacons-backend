@@ -8,6 +8,10 @@ class SeenOfferAdmin(admin.ModelAdmin):
     list_display = ('offer', 'user')
 
 
+class StoreOfferAdmin(admin.ModelAdmin):
+    list_display = ('name', 'store')
+
+
 class MyUserChangeForm(UserChangeForm):
     password = forms.CharField(widget=forms.PasswordInput(), required=False)
 
@@ -27,7 +31,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Store)
-admin.site.register(StoreOffer)
+admin.site.register(StoreOffer, StoreOfferAdmin)
 admin.site.register(Beacon)
 admin.site.register(User, UserAdmin)
 admin.site.register(SeenOffer, SeenOfferAdmin)

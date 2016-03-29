@@ -55,10 +55,7 @@ class BeaconsSeenView(View):
 
                 user.mark_offer_as_seen(offer)
 
-        result = {
-            # 'b': [b.as_json() for b in beacons]
-        }
-        return JsonResponse(result, safe=False)
+        return JsonResponse({'success': 'ok'}, safe=False)
 
     @csrf_exempt
     @token_required
@@ -104,7 +101,7 @@ class StoreOfferView(View):
 class StoreOffersView(View):
 
     def get(self, request, store_id):
-        offers = StoreOffer.objects.filter(store__id=store_id).all()
+        offers = StoreOffer.objects.filter(store__id=store_id).order_by('-id')
 
         result = {
             'offers': [s.as_json() for s in offers]
